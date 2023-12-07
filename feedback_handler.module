@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * Implementa hook_menu().
+ */
+function feedback_handler_menu()
+{
+    $items = array();
+
+    $items['feedback'] = array(
+        'title' => 'Avaliar',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('feedback_handler_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+
+    return $items;
+}
+
+/**
+ * Implementa hook_form().
+ */
+function feedback_handler_form($form, &$form_state)
+{
+    $form['avaliacao'] = array(
+        '#type' => 'radios',
+        '#title' => t('Avaliação'),
+        '#options' => array(
+            1 => t('Ruim'),
+            2 => t('Regular'),
+            3 => t('Bom'),
+            4 => t('Muito Bom'),
+            5 => t('Excelente'),
+        ),
+        '#required' => TRUE,
+    );
+
+    $form['comentario'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Comentário'),
+        '#required' => TRUE,
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Enviar Avaliação'),
+    );
+
+    return $form;
+}
+
+/**
+ * Implementa hook_form_validate().
+ */
+function feedback_handler_form_validate($form, &$form_state)
+{
+    // Validar e sanitizar os dados conforme necessário.
+}
+
+/**
+ * Implementa hook_form_submit().
+ */
+function feedback_handler_form_submit($form, &$form_state)
+{
+    $avaliacao = $form_state['values']['avaliacao'];
+    $comentario = $form_state['values']['comentario'];
+    $ip = ip_address();
+    $data_hora = date('Y-m-d H:i:s');
+
+    $feedback = array(
+        'avaliacao' => $avaliacao,
+        'comentario' => $comentario,
+        'ip' => $ip,
+        'data_hora' => $data_hora,
+    );
+
+    // Salvar os dados no banco de dados ou realizar qualquer outra ação necessária.
+    // Por exemplo, você pode usar a função db_insert() para inserir os dados em uma tabela personalizada.
+
+    drupal_set_message(t('Obrigado pela sua avaliação!'));
+    $form_state['redirect'] = 'feedback';
+}

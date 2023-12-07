@@ -1,0 +1,6 @@
+name = Feedback Handler
+description = Um módulo personalizado para o Drupal 7 para avaliação do site.
+core = 7.x
+package = Meus Módulos
+dependencies[] = dblog
+package = Custom
